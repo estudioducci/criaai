@@ -275,6 +275,18 @@ footer img { width: 120px; margin: 0 auto 12px; }
   .cartao:hover, .aula:hover { transform: none; }
 }
 </style>
+<!-- Pixel da Meta: Pixel criaaí (1442663328074571) -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1442663328074571');
+fbq('track', 'PageView');
+fbq('track', 'ViewContent', {content_name: 'criaaí', content_type: 'product', value: 47, currency: 'BRL'});
+</script>
+<noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1442663328074571&ev=PageView&noscript=1"></noscript>
 </head>
 <body>
 
@@ -528,7 +540,17 @@ footer img { width: 120px; margin: 0 auto 12px; }
   document.documentElement.classList.add('js');
   const reduz = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (CHECKOUT) document.querySelectorAll('[data-checkout]').forEach(a => { a.href = CHECKOUT; a.target = '_blank'; a.rel = 'noopener'; });
+  // O checkout abre na mesma aba e leva junto as UTMs do anúncio, para a Cakto saber de onde veio a venda.
+  const UTMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src', 'sck', 'fbclid'];
+  const linkCheckout = () => {
+    const url = new URL(CHECKOUT), aqui = new URLSearchParams(location.search);
+    UTMS.forEach(k => { if (aqui.get(k)) url.searchParams.set(k, aqui.get(k)); });
+    return url.toString();
+  };
+  if (CHECKOUT) document.querySelectorAll('[data-checkout]').forEach(a => {
+    a.href = linkCheckout();
+    a.addEventListener('click', () => { if (window.fbq) fbq('trackCustom', 'CliqueCheckout', {value: 47, currency: 'BRL'}); });
+  });
 
   // revelar e contar ao rolar
   const contar = el => {
